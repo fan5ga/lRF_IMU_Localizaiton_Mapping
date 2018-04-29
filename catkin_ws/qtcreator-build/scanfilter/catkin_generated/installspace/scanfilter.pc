@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: scanfilter
+Description: Description of scanfilter
+Version: 0.0.0
+Cflags: 
+Libs: -L/usr/local/lib 
+Requires: 

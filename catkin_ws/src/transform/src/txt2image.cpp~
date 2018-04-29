@@ -1,0 +1,44 @@
+#include"cv.h"
+#include "opencv2/core/core.hpp"
+#include"opencv2/opencv.hpp"
+#include"stdlib.h"
+#include"fstream"
+#include"iostream"
+
+
+using namespace std;
+using namespace cv;
+#define bufLen 30000
+static char buffer[bufLen];
+int main(void)
+{
+	ifstream file("data1.txt",ios::in);
+	if(!file)return 0;
+	Mat pic(69,518,CV_8UC1,Scalar::all(0));
+	int row=0;
+	const char *delima = "[, ]";
+	
+	while(!file.eof())
+	{
+		file.getline(buffer,bufLen,'\n');
+		char *p;
+		p = strtok(buffer, delima);
+		double temp;
+		int col = 0;
+		while(p)
+		{
+			temp = atof(p);
+			uchar grayscale =(uchar(temp*50));//%255;
+			pic.at<uchar>(68-row,517-col) = grayscale;//==0? 255:grayscale;
+			p=strtok(NULL,delima);
+			col++;
+			//cout<<temp<<endl;
+		}
+		file.getline(buffer,bufLen,'\n');
+		row++;
+	}
+	imshow("sas",pic);
+	imwrite("data1.bmp",pic);
+//	waitKey();
+	return 0 ;
+}

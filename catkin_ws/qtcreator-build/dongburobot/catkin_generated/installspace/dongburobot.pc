@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: dongburobot
+Description: Description of dongburobot
+Version: 0.0.0
+Cflags: 
+Libs: -L/usr/local/lib 
+Requires: 

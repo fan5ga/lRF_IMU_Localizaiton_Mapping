@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "dongburobot")
+set(dongburobot_MAINTAINER "wangzt <wangzt@todo.todo>")
+set(dongburobot_DEPRECATED "")
+set(dongburobot_VERSION "0.0.0")
+set(dongburobot_BUILD_DEPENDS "cv_bridge" "image_transport" "roscpp" "rospy" "std_msgs")
+set(dongburobot_RUN_DEPENDS "roscpp" "cv_bridge" "image_transport" "rospy" "std_msgs")
+set(dongburobot_BUILDTOOL_DEPENDS "catkin")

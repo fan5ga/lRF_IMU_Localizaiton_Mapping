@@ -1,0 +1,8 @@
+prefix=/home/wangzt/catkin_ws/devel
+
+Name: gps_pos
+Description: Description of gps_pos
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/wangzt/catkin_ws/devel/lib 
+Requires: 

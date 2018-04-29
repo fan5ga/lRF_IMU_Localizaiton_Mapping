@@ -1,0 +1,8 @@
+prefix=/home/longtan/catkin_ws/devel
+
+Name: dongburobot
+Description: Description of dongburobot
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/longtan/catkin_ws/devel/lib 
+Requires: 

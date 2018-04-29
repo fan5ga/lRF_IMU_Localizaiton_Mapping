@@ -1,0 +1,8 @@
+prefix=/home/wangzt/catkin_ws/devel
+
+Name: armtest
+Description: Description of armtest
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/wangzt/catkin_ws/devel/lib 
+Requires: 

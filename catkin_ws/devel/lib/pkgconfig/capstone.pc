@@ -1,0 +1,8 @@
+prefix=/home/wangzt/catkin_ws/devel
+
+Name: capstone
+Description: Description of capstone
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/wangzt/catkin_ws/devel/lib 
+Requires: 

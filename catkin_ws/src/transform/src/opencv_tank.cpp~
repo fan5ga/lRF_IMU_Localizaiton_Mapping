@@ -1,0 +1,128 @@
+#include "cv.h"
+#include "highgui.h"
+#include"fstream"
+
+#include"opencv2/opencv.hpp"
+#include"opencv2/core/core.hpp"  
+#include"opencv2/highgui/highgui.hpp"
+#include"opencv2/video/background_segm.hpp"
+#include"opencv2/features2d/features2d.hpp"
+#include"opencv2/nonfree/features2d.hpp"
+#include"opencv2/nonfree/nonfree.hpp"
+
+using namespace cv;  
+using namespace std;  
+
+
+int main(int argc, char ** argv){
+	
+	Mat image1 = imread("sav1.bmp",0);
+	Mat image2 = imread("sav2.bmp",0);
+	//resize(image2,image2,Size(640,480));
+
+	imshow("SURF detector img1",image1);
+	imshow("SURF detector img2",image2);
+
+	int minHessian = 400;
+	SurfFeatureDetector detector( minHessian);
+	vector<KeyPoint> keypoints_1, keypoints_2;
+
+	vector<DMatch> good_matches;
+
+	do{
+		detector.detect(image1,keypoints_1);
+		detector.detect(image2,keypoints_2);
+
+		Mat img_keypoints_1, img_keypoints_2;
+		drawKeypoints(image1, keypoints_1, img_keypoints_1,Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+		drawKeypoints(image2, keypoints_2, img_keypoints_2,Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+
+		SurfDescriptorExtractor extractor;
+		Mat descriptors_1, descriptors_2;
+		extractor.compute( image1, keypoints_1, descriptors_1 );
+		extractor.compute( image2, keypoints_2, descriptors_2 );
+
+		FlannBasedMatcher matcher;
+		vector< DMatch > matches;
+		matcher.match(descriptors_1,descriptors_2, matches);
+		double max_dist = 0; 
+		double min_dist = 100;
+
+		for( int i = 0; i < descriptors_1.rows; i++ ){ 
+			double dist = matches[i].distance;
+
+			if( dist < min_dist )
+				min_dist = dist;
+			if( dist > max_dist ) 
+				max_dist = dist;
+		}
+
+		for( int i = 0; i < descriptors_1.rows; i++ ){ 
+			int x=int(keypoints_1[ matches[i].queryIdx ].pt.x);
+			int y=int(keypoints_1[ matches[i].queryIdx ].pt.y);// && image1.at<uchar>(y,x)!=255
+			if( matches[i].distance < 1.4*min_dist){ // i changed value of coefficient form "2" to "2.8" in order to draw the border of gear.
+				good_matches.push_back( matches[i]);
+			}
+		}
+		cout<<good_matches.size()<<endl;
+
+	}while(good_matches.size()<8);//algorithm "findHomography": CV_FM_RANSAC for the RANSAC algorithm. N >= 8	
+
+
+	Mat img_matches;
+	ofstream outfile("out1.txt"); 
+	drawMatches( image1, keypoints_1, image2, keypoints_2,good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
+		vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+
+	std::vector<Point> obj;
+	std::vector<Point> scene;
+	for( int i = 0; i < good_matches.size(); i++ ){
+		obj.push_back( keypoints_1[ good_matches[i].queryIdx ].pt );
+		scene.push_back( keypoints_2[ good_matches[i].trainIdx ].pt );
+		/*Point a = keypoints_1[ good_matches[i].queryIdx ].pt;
+		Point b = keypoints_2[ good_matches[i].queryIdx ].pt;
+		cout<<a.x<<b.y;*/
+		outfile<<"("<<obj[i].x<<","<<obj[i].y<<")"<<"---"<<"("<<scene[i].x<<","<<scene[i].y<<")"<<endl;
+	}
+	outfile.close();
+
+	imshow("end",img_matches);
+	imwrite("end3.bmp",img_matches);
+	cvWaitKey();
+	//Mat H = findHomography( obj, scene, CV_RANSAC );
+	////here
+	//std::vector<Point2f> obj_corners(4);
+	//obj_corners[0] = cvPoint(0,0); obj_corners[1] = cvPoint( image1.cols, 0 );
+	//obj_corners[2] = cvPoint( image1.cols, image1.rows ); obj_corners[3] = cvPoint( 0, image1.rows );
+	//std::vector<Point2f> scene_corners(4);
+
+	//perspectiveTransform( obj_corners, scene_corners, H);
+
+	//line( img_matches, scene_corners[0] + Point2f( image1.cols, 0), scene_corners[1] + Point2f( image1.cols, 0), Scalar(0, 255, 0), 4 );
+	//line( img_matches, scene_corners[1] + Point2f( image1.cols, 0), scene_corners[2] + Point2f( image1.cols, 0), Scalar( 0, 255, 0), 4 );
+	//line( img_matches, scene_corners[2] + Point2f( image1.cols, 0), scene_corners[3] + Point2f( image1.cols, 0), Scalar( 0, 255, 0), 4 );
+	//line( img_matches, scene_corners[3] + Point2f( image1.cols, 0), scene_corners[0] + Point2f( image1.cols, 0), Scalar( 0, 255, 0), 4 );
+	//
+	//char *name,*file_name;
+	//switch(choice)
+	//{
+	//case 1: name = "sensor"; file_name = "sensor_match.bmp";break;
+	//case 2: name = "adapter";file_name = "adapter_match.bmp";break;
+	//case 3: name = "gear";file_name = "gear_match.bmp";break;
+	//}
+	//
+	//putText(img_matches,name,scene_corners[3] + Point2f( image1.cols+5, 0),FONT_HERSHEY_SIMPLEX,1,Scalar(255,0,255));
+
+	//imshow( "Good Matches & Object detection", img_matches );
+
+	//imwrite(file_name,img_matches);
+
+
+	//while(1){
+	//	if(cvWaitKey(33) >=27){
+	//		break;
+	//	}
+	//}
+	return 0;
+}
+

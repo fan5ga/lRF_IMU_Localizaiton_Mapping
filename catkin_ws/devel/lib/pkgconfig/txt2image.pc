@@ -1,0 +1,8 @@
+prefix=/home/wangzt/catkin_ws/devel
+
+Name: txt2image
+Description: Description of txt2image
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/wangzt/catkin_ws/devel/lib 
+Requires: 

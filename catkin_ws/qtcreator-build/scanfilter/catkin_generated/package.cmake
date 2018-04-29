@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "scanfilter")
+set(scanfilter_MAINTAINER "wangzt <wangzt@todo.todo>")
+set(scanfilter_DEPRECATED "")
+set(scanfilter_VERSION "0.0.0")
+set(scanfilter_BUILD_DEPENDS "roscpp" "sensor_msgs" "std_msgs" "laser_geometry")
+set(scanfilter_RUN_DEPENDS "laser_geometry" "roscpp" "sensor_msgs" "std_msgs")
+set(scanfilter_BUILDTOOL_DEPENDS "catkin")
